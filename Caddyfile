@@ -1,0 +1,32 @@
+{$DOMAIN}:443 {
+  log {
+    level INFO
+    output file {$LOG_FILE} {
+      roll_size 10MB
+      roll_keep 10
+    }
+  }
+
+  # Use the ACME HTTP-01 challenge to get a cert for the configured domain.
+  tls {$EMAIL}
+
+  # This setting may have compatibility issues with some browsers
+  # (e.g., attachment downloading on Firefox). Try disabling this
+  # if you encounter issues.
+  encode gzip
+
+  # Notifications redirected to the WebSocket server
+  reverse_proxy /notifications/hub vaultwarden:3012
+
+  # Proxy everything else to Rocket
+  reverse_proxy vaultwarden:80 {
+       # Send the true remote IP to Rocket, so that vaultwarden can put this in the
+       # log, so that fail2ban can ban the correct IP.
+       header_up X-Real-IP {remote_host}
+       header_down Strict-Transport-Security "max-age=63072000; includeSubdomains; preload"
+       header_down Permissions-Policy "accelerometer=(), ambient-light-sensor=(), autoplay=(), battery=(), camera=(), clipboard-read=(), clipboard-write=(), display-capture=(), document-domain=(), encrypted-media=(), fullscreen=(), geolocation=(), gyroscope=(), hid=(), idle-detection=(), interest-cohort=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), screen-wake-lock=(), serial=(), sync-xhr=(), usb=(), xr-spatial-tracking=()"
+       header_down X-XSS-Protection "0"
+       header_down Content-Security-Policy "upgrade-insecure-requests; block-all-mixed-content; form-action 'none'; frame-ancestors 'self' chrome-extension://nngceckbapebfimnlniiiahkandclblb chrome-extension://jbkfoedolllekgbhcbcoahefnbanhhlh moz-extension://*"
+       header_down Expect-CT: "enforce, max-age=63072000"
+  }
+}

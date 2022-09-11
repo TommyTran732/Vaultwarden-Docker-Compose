@@ -1,0 +1,71 @@
+version: '3'
+
+services:
+  vaultwarden:
+    image: vaultwarden/server:alpine
+    container_name: vaultwarden
+    restart: unless-stopped
+    environment:
+      - WEBSOCKET_ENABLED=true  # Enable WebSocket notifications.
+      - DATABASE_URL=postgresql://vaultwarden:YOUR_POSTGRESQL_PASSWORD@postgres:5432/vaultwarden
+      - ADMIN_TOKEN=YOUR_ADMIN_PASSWORD
+    volumes:
+      - vaultwarden:/data
+    networks:
+      - vaultwarden
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+  caddy:
+    image: caddy:alpine
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - 80:80  # Needed for the ACME HTTP-01 challenge.
+      - 443:443
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:Z
+      - ./caddy-config:/config:Z
+      - ./caddy-data:/data:Z
+    environment:
+      - DOMAIN=YOUR_DOMAIN  # Your domain.
+      - EMAIL=YOUR_EMAIL         # The email address to use for ACME registration.
+      - LOG_FILE=/data/access.log
+    networks:
+      - vaultwarden
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CAP_NET_BIND_SERVICE
+
+  postgres:
+    image: postgres:alpine
+    container_name: postgres
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=vaultwarden
+      - POSTGRES_PASSWORD=YOUR_POSTGRESQL_PASSWORD
+    restart: unless-stopped
+    networks: 
+      - vaultwarden
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_READ_SEARCH
+      - SETGID
+      - SETUID
+
+volumes:
+  postgres:
+  vaultwarden:
+
+networks:
+  vaultwarden:
