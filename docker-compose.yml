@@ -13,6 +13,7 @@ services:
       - vaultwarden:/data
     networks:
       - vaultwarden
+    read_only: true
     security_opt:
       - no-new-privileges:true
     cap_drop:
@@ -35,6 +36,7 @@ services:
       - LOG_FILE=/data/access.log
     networks:
       - vaultwarden
+    read_only: true
     security_opt:
       - no-new-privileges:true
     cap_drop:
