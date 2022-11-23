@@ -13,6 +13,7 @@ services:
       - vaultwarden:/data
     networks:
       - vaultwarden
+      - postgres
     read_only: true
     security_opt:
       - no-new-privileges:true
@@ -45,7 +46,7 @@ services:
       - CAP_NET_BIND_SERVICE
 
   postgres:
-    image: postgres:alpine
+    image: docker.io/postgres-15:alpine
     container_name: postgres
     volumes:
       - postgres:/var/lib/postgresql/data
@@ -53,8 +54,8 @@ services:
       - POSTGRES_USER=vaultwarden
       - POSTGRES_PASSWORD=YOUR_POSTGRESQL_PASSWORD
     restart: unless-stopped
-    networks: 
-      - vaultwarden
+    networks:
+      - postgres
     user: "70:70"
     read_only: true
     tmpfs:
@@ -65,8 +66,9 @@ services:
       - ALL
 
 volumes:
-  postgres:
   vaultwarden:
+  postgres:
 
 networks:
   vaultwarden:
+  postgres:

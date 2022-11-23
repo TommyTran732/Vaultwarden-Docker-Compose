@@ -1,4 +1,4 @@
-# Synapse-Docker-Compose
+# Vaultwarden Docker-Compose
 Vaultwarden Docker-Compose
 
 1. Update `docker-compose.yml`
