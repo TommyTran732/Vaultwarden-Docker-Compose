@@ -54,7 +54,6 @@ services:
     environment:
       - POSTGRES_USER=vaultwarden
       - POSTGRES_PASSWORD=YOUR_POSTGRESQL_PASSWORD
-    restart: unless-stopped
     networks:
       - postgres
     user: "70:70"
