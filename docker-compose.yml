@@ -56,6 +56,10 @@ services:
       - POSTGRES_PASSWORD=YOUR_POSTGRESQL_PASSWORD
     networks:
       - postgres
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "vaultwarden"]
+      interval: 15s
+      timeout: 5s
     user: "70:70"
     read_only: true
     tmpfs:
