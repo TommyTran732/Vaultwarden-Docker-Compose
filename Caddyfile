@@ -35,6 +35,5 @@
       header_down X-XSS-Protection "0"
       header_down Cross-Origin-Opener-Policy same-origin
       header_down Cross-Origin-Resource-Policy : same-origin
-      header_down Expect-CT: "enforce, max-age=63072000"
   }
 }
