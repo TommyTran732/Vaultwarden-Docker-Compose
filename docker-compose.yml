@@ -9,18 +9,18 @@ services:
       - WEBSOCKET_ENABLED=true  # Enable WebSocket notifications.
       - DATABASE_URL=postgresql://vaultwarden:YOUR_POSTGRESQL_PASSWORD@postgres:5432/vaultwarden
       - ADMIN_TOKEN=YOUR_ADMIN_PASSWORD
+      - ROCKET_PORT=8080
     volumes:
       - vaultwarden:/data
     networks:
       - vaultwarden
       - postgres
+    user: nobody
     read_only: true
     security_opt:
       - no-new-privileges:true
     cap_drop:
       - ALL
-    cap_add:
-      - NET_BIND_SERVICE
 
   caddy:
     image: caddy:alpine
