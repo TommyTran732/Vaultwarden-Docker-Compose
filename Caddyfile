@@ -30,7 +30,7 @@
       # log, so that fail2ban can ban the correct IP.
       header_up X-Real-IP {remote_host}
       header_down Strict-Transport-Security "max-age=63072000; includeSubdomains; preload"
-      header_down Permissions-Policy "accelerometer=(), ambient-light-sensor=(), autoplay=(), battery=(), camera=(), clipboard-read=(), display-capture=(), document-domain=(), encrypted-media=(), fullscreen=(), geolocation=(), gyroscope=(), hid=(), idle-detection=(), interest-cohort=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), screen-wake-lock=(), serial=(), usb=(), sync-xhr=(), xr-spatial-tracking=()"
+      header_down +Permissions-Policy "hid=(), idle-detection=(), interest-cohort=(), serial=()"
       header_down +Content-Security-Policy "upgrade-insecure-requests; block-all-mixed-content; base-uri 'none'"
       header_down X-XSS-Protection "0"
       header_down Cross-Origin-Opener-Policy same-origin
